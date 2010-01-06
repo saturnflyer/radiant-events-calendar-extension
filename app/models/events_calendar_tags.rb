@@ -110,24 +110,33 @@ module EventsCalendarTags
     Renders the location for the current event.
   }
   tag 'event:location' do |tag|
-    event = tag.locals.event
-    event.location
+    tag.locals.event.location
   end
 
   desc %{
     Renders the description for the current event.
   }
   tag 'event:description' do |tag|
-    event = tag.locals.event
-    event.description_html
+    tag.locals.event.description_html
   end
 
   desc %{
     Renders the category for the current event.
   }
   tag 'event:category' do |tag|
-    event = tag.locals.event
-    event.category
+    tag.locals.event.category
+  end
+  
+  desc %{ Provides a link to the Event page if one has been created. This will output nothing if no Event page is found.}
+  tag 'event:link' do |tag|
+    return '' if EventPage.count == 0
+    event_page = EventPage.first
+    options = tag.attr.dup
+    anchor = options['anchor'] ? "##{options.delete('anchor')}" : ''
+    attributes = options.inject('') { |s, (k, v)| s << %{#{k.downcase}="#{v}" } }.strip
+    attributes = " #{attributes}" unless attributes.empty?
+    text = tag.double? ? tag.expand : tag.locals.event.name
+    %{<a href="#{event_page.url}/#{tag.locals.event.id}#{anchor}"#{attributes}>#{text}</a>}
   end
 
   desc %{
