@@ -62,6 +62,12 @@ module EventsCalendarTags
     format = tag.attr['format'] || '%Y-%m-%d'
     event.date.strftime(format)
   end
+  
+  tag 'event:date:end' do |tag|
+    event = tag.locals.event
+    format = tag.attr['format'] || '%Y-%m-%d'
+    event.end_date.strftime(format)
+  end
 
   desc %{
     Renders the time for the current event.
@@ -81,6 +87,24 @@ module EventsCalendarTags
     [ event.start_time.strftime(format),
       event.end_time ? event.end_time.strftime(format) : nil ].compact.join(" #{tag.attr['connector'] || '-'} ")
   end
+  
+  desc %{ Individual start time for the current event. }
+  tag 'event:time:start' do |tag|
+    event = tag.locals.event
+    return '' unless event.start_time
+
+    format = tag.attr['format'] || '%H:%M'
+    event.start_time.strftime(format)
+  end
+  
+  desc %{ Individual end time for the current event. }
+  tag 'event:time:end' do |tag|
+    event = tag.locals.event
+    return '' unless event.end_time
+
+    format = tag.attr['format'] || '%H:%M'
+    event.end_time.strftime(format)
+  end
 
   desc %{
     Renders the location for the current event.
@@ -95,7 +119,7 @@ module EventsCalendarTags
   }
   tag 'event:description' do |tag|
     event = tag.locals.event
-    event.description
+    event.description_html
   end
 
   desc %{
