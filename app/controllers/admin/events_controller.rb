@@ -3,6 +3,14 @@ class Admin::EventsController < Admin::ResourceController
   model_class Event
 
   helper 'admin/references'
+  
+  def index
+    if params['looking'] == 'back'
+      @events = Event.past
+    else
+      @events = Event.future
+    end
+  end
 
   def auto_complete_for_event_category
     find_options = {
@@ -15,12 +23,6 @@ class Admin::EventsController < Admin::ResourceController
   end
 
   protected
-
-    def load_models
-      # Order the events by date, and exclude any in the past
-      self.models = model_class.all(:order => 'date, start_time, name',
-                                    :conditions => [ 'date >= ?', Date.today ])
-    end
 
     def adjust_times
       start_time = parse_time(params[:event][:'start_time(5i)'])
