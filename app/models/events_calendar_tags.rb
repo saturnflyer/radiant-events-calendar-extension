@@ -136,7 +136,7 @@ module EventsCalendarTags
     attributes = options.inject('') { |s, (k, v)| s << %{#{k.downcase}="#{v}" } }.strip
     attributes = " #{attributes}" unless attributes.empty?
     text = tag.double? ? tag.expand : tag.locals.event.name
-    %{<a href="#{event_page.url}/#{tag.locals.event.id}#{anchor}"#{attributes}>#{text}</a>}
+    %{<a href="#{event_page.url}#{tag.locals.event.id}#{anchor}"#{attributes}>#{text}</a>}
   end
 
   desc %{
