@@ -9,6 +9,7 @@ class EventPage < Page
   
   def find_by_url(url, live = true, clean = false)
     url = clean_url(url) if clean
+    return self if url =~ %r{^#{ self.url }/?$}
     if url =~ %r{^#{ self.url }(\d+)/?}
       begin 
         self.event = Event.find($1)
